@@ -1,0 +1,30 @@
+{
+  "question": "Does confidence-based self-training with LightGBM, using unlabeled target-domain windows, beat a supervised MLP trained on the same few labels for HAR with 5 labels per activity?",
+  "method": "Stratified 80/20 pool/test split (seed 42). 5 labeled rows per activity from the pool; remaining pool rows are unlabeled. Baseline: MLP on the shots. Improved: LightGBM self-trained with pseudo-labels (p>0.9, 3 rounds). Macro-F1 on the untouched test set, mean over seeds 42-44.",
+  "dataset": {
+    "name": "har",
+    "source_url": "https://openml.org/data/v1/download/1589271/har.arff",
+    "n_rows": 10299,
+    "n_train": 8239,
+    "n_test": 2060,
+    "same_as_paper": false,
+    "baseline_is_papers_method": false
+  },
+  "metric_name": "macro_f1",
+  "higher_is_better": true,
+  "baseline": "Supervised scikit-learn MLPClassifier (one hidden layer of 128, default Adam) trained only on the 5-shot labeled rows; stand-in for the paper's supervised deep HAR model.",
+  "improved": "LightGBM classifier self-trained on the 5-shot labels plus confident pseudo-labels (max probability > 0.9) for unlabeled pool rows, iterated for 3 rounds.",
+  "metrics": {
+    "baseline_score": 0.6957721850347882,
+    "improved_score": 0.7581761929460266,
+    "improvement": 0.062404007911238346,
+    "baseline_score_std": 0.040963693576937917,
+    "improved_score_std": 0.010965516000963373,
+    "baseline_f1": 0.6957721850347882,
+    "improved_f1": 0.7581761929460266,
+    "baseline_accuracy": 0.6914239482200647,
+    "improved_accuracy": 0.7642394822006472,
+    "mean_pseudo_labels_final_round": 7969.0
+  },
+  "notes": "No hyper-parameter search was run: all settings are fixed a priori, so nothing was tuned on the test set (and no CV tuning was needed). Only 5 labels per class, so results vary with the shot sample; the std is over 3 seeds (population std). Scaler is fit on the pool, including unlabeled rows (no test leakage). The baseline is a stand-in, not the paper's NLP-label transfer method. Dataset is small (about 10k rows), so no subsampling was needed."
+}
