@@ -20,6 +20,27 @@ python analysis.py
 
 Results are written to `results.json` (and a chart to `figures/`).
 
+## Results (latest run)
+
+On the public HAR dataset with 5 labels per activity, LightGBM self-training with confident pseudo-labels reached 76% macro-F1 on the held-out test set, versus 70% for a standard supervised MLP classifier trained on the same 5-shot labels; the 6-point gain is averaged over 3 seeds, with notable seed variance.
+
+| Metric | Value |
+|---|---|
+| baseline_score | 0.6958 |
+| improved_score | 0.7582 |
+| improvement | 0.0624 |
+| baseline_score_std | 0.04096 |
+| improved_score_std | 0.01097 |
+| baseline_f1 | 0.6958 |
+| improved_f1 | 0.7582 |
+| baseline_accuracy | 0.6914 |
+| improved_accuracy | 0.7642 |
+| mean_pseudo_labels_final_round | 7969 |
+
+Run on 2026-10-12. Full output: [results.json](results.json) · [run.log](run.log)
+
+Notes: No hyper-parameter search was run: all settings are fixed a priori, so nothing was tuned on the test set (and no CV tuning was needed). Only 5 labels per class, so results vary with the shot sample; the std is over 3 seeds (population std). Scaler is fit on the pool, including unlabeled rows (no test leakage). The baseline is a stand-in, not the paper's NLP-label transfer method. Dataset is small (about 10k rows), so no subsampling was needed.
+
 ## Reference
 
 This project is motivated by the following paper:
